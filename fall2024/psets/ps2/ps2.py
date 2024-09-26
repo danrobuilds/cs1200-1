@@ -61,7 +61,7 @@ class BinarySearchTree:
         if left_size > ind and self.left is not None:
             return self.left.select(ind)
         if left_size < ind and self.right is not None:
-            return self.right.select(ind)
+            return self.right.select(ind - left_size - 1)
         return None
 
 
@@ -95,11 +95,12 @@ class BinarySearchTree:
             if self.left is None:
                 self.left = BinarySearchTree(self.debugger)
             self.left.insert(key)
+            self.size += 1
         elif self.key < key:
             if self.right is None:
                 self.right = BinarySearchTree(self.debugger)
             self.right.insert(key)
-        self.calculate_sizes()
+            self.size += 1
         return self
 
     
@@ -127,7 +128,57 @@ class BinarySearchTree:
        11 
     '''
     def rotate(self, direction, child_side):
-        # Your code goes here
+
+        if child_side == "L":
+            child = self.left
+        elif child_side == "R":
+            child = self.right
+
+
+        if direction == "R":
+            
+
+            if child is None or child.left is None:
+                return self  
+
+            new_child = child.left  
+            child.left = new_child.right
+            new_child.right = child
+
+            if child_side == "L":
+                self.left = new_child
+            else:
+                self.right = new_child
+            
+
+        elif direction == "L":
+
+            if child is None or child.right is None:
+                return self  
+
+            new_child = child.right  
+            
+            child.right = new_child.left
+            new_child.left = child
+
+            if child_side == "L":
+                self.left = new_child
+            else:
+                self.right = new_child
+
+        child.size = 1
+        new_child.size = 1
+
+        if child.left:
+            child.size += child.left.size
+        if child.right:
+            child.size += child.right.size
+
+        if new_child.right: 
+            new_child.size += new_child.right.size
+        if new_child.left:
+            new_child.size += new_child.left.size
+
         return self
 
     def print_bst(self):

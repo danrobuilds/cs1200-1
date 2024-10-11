@@ -35,9 +35,32 @@ def QuickSelect(arr, i):
 
     # Feel free to use get_random_index(arr) or get_random_int(start_inclusive, end_inclusive)
     # ... see the helper functions below
-    pass
-    return (0, -1)
+    lower = []
+    pivots = []
+    higher = []
 
+
+    if len(arr) == 1:
+        return arr[0]
+    
+    pivot_index = get_random_index(arr)
+    pivot = arr[pivot_index][0]
+
+    for value in arr:
+        if value[0] > pivot:
+            higher.append(value)
+        elif value[0] < pivot:
+            lower.append(value)
+        else:
+            pivots.append(value)
+        
+    if i < len(lower):
+        return QuickSelect(lower, i)
+    elif i >= (len(lower) + len(pivots)):
+        return QuickSelect(higher, i - len(lower) - len(pivots))
+    else:
+        return pivots[0]
+        
 
 '''
 Uses MergeSort to resolve a number of queries where each query is to find an key-value pair (Kj, Vj) such that Kj is an i’th smallest key.
@@ -54,8 +77,16 @@ NOTE: This is different from the QuickSelect definition. This function takes in 
 def MergeSortSelect(arr, query_list):
     # Only call MergeSort once
     # ... MergeSort has already been implemented for you (see below)
-    pass
-    return [(0, -1)] * len(query_list)  # replace this line with your return
+
+    sorted_array = MergeSort(arr)
+
+    res = []
+
+    for q in query_list:
+        
+        res.append(sorted_array[q])
+
+    return res  # replace this line with your return
 
 
 ##################################
@@ -67,13 +98,13 @@ def MergeSortSelect(arr, query_list):
 
 def experiments():
     # Edit this parameter
-    k = [1, 1, 1, 1, 1]
+    k = [44, 45, 46, 47, 48]
 
     # Feel free to edit these initial parameters
 
-    RUNS = 20  # Number of runs for each trial; more runs means better distributions approximation but longer experiment
+    RUNS = 30  # Number of runs for each trial; more runs means better distributions approximation but longer experiment
     HEIGHT = 1.5  # Height of a chart
-    WIDTH = 3   # Width of a chart
+    WIDTH = 2   # Width of a chart
     # Determines if subcharts share the same axis scale/limits
     # ... since the trails cover a wide range, sharing the same scale/limits can cause some lines to be too small.
     SAME_AXIS_SCALE = False

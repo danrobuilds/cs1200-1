@@ -164,12 +164,39 @@ def bfs_2_coloring(G, precolored_nodes=None):
 
         if len(precolored_nodes) == G.N:
             return G.colors
+        
+
+
+    for node in range(G.N):
+        if node not in visited:
+            d = set() 
+            d.add(node)
+            visited.add(node)
+
+            
+            while d:
+                dnext = set()
+                for n1 in d:
+                    if G.colors[n1] is None:
+                        G.colors[n1] = 0
+                    for n2 in G.edges[n1]:
+                        if n2 not in visited:
+                            G.colors[n2] = 1-G.colors[n1]
+                            visited.add(n2)
+                            dnext.add(n2)
+                    else:
+                        if G.colors[n1] == G.colors[n2]:
+                            G.reset_colors()
+                            return None
+                                
+                d = dnext
+
+    return G.colors
+    
     
     # TODO: Complete this function by implementing two-coloring using the colors 0 and 1.
     # If there is no valid coloring, reset all the colors to None using G.reset_colors()
-    
-    G.reset_colors()
-    return None
+
 
 
 
@@ -187,9 +214,21 @@ def bfs_2_coloring(G, precolored_nodes=None):
 # If no coloring is possible, resets all of G's colors to None and returns None.
 def iset_bfs_3_coloring(G):
     # TODO: Complete this function.
+    for iset in get_maximal_isets(G):
 
+        if len(iset) == G.N:
+            return G.colors
+            
+        if bfs_2_coloring(G, precolored_nodes = iset) != None:
+            return G.colors
+        
     G.reset_colors()
     return None
+
+
+
+
+    
 
 # Feel free to add miscellaneous tests below!
 if __name__ == "__main__":
